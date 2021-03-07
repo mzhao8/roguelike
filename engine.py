@@ -1,50 +1,31 @@
 # responsible for drawing the map
+from __future__ import annotations
 
-from typing import Iterable, Any
+from typing import TYPE_CHECKING
 
 from tcod.context import Context
 from tcod.console import Console
 from tcod.map import compute_fov
 
+from input_handlers import MainEventHandler
 
-from entity import Entity
-from game_map import GameMap
-from input_handlers import EventHandler
+if TYPE_CHECKING:
+    from entity import Actor
+    from game_map import GameMap
+    from input_handlers import EventHandler
 
 
 class Engine:
-    # takes 4 args: entities, event handler, game map, and player
-    # entities is a set (of entities), which behaves kind of like a list that enforces uniqueness. That is, we can’t add an Entity to the set twice, whereas a list would allow that. In our case, having an entity in entities twice doesn’t make sense. Moved to gamemap
-    # event handler is the same event_handler that we used in main.py. It will handle our events.
-    # player is the player Entity. We have a separate reference to it outside of entities for ease of access. We’ll need to access player a lot more than a random entity in entities.
-    def __init__(
-        self,
-        event_handler: EventHandler,
-        game_map: GameMap,
-        player: Entity,
-    ):
-        self.event_handler = event_handler
-        self.game_map = game_map
+    game_map: GameMap  # owning an instance of gamemap
+
+    def __init__(self, player: Actor):
+        self.event_handler: EventHandler = MainEventHandler(self)
         self.player = player
-        self.update_fov()
 
     def handle_enemy_turns(self) -> None:
-        for entity in self.game_map.entities - {self.player}:
-            print(f"The {entity.name} wonders when it will get a real turn.")
-
-    # pass events through and iterate through them
-    def handle_events(self, events: Iterable[Any]) -> None:
-        for event in events:
-            action = self.event_handler.dispatch(event)
-
-            if action is None:
-                continue
-
-            action.perform(
-                self, self.player
-            )  # passing Engine to the action, providing it context to do what we want
-            self.handle_enemy_turns()
-            self.update_fov()  # Update the FOV before the players next action
+        for entity in set(self.game_map.actors) - {self.player}:
+            if entity.ai:
+                entity.ai.perform()
 
     def update_fov(self) -> None:
         """
@@ -62,6 +43,12 @@ class Engine:
     def render(self, console: Console, context: Context) -> None:
         # game map render method draws it onto the screen
         self.game_map.render(console)
+
+        console.print(
+            x=1,
+            y=47,
+            string=f"HP: {self.player.fighter.hp}/{self.player.fighter.max_hp}",
+        )
 
         context.present(console)
 
