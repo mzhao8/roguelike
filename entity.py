@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 
-from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING
+from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
 
 from render_order import RenderOrder
 
@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from components.ai import BaseAI
     from components.consumable import Consumable
     from components.fighter import Fighter
+    from components.inventory import Inventory
     from game_map import GameMap
 
 T = TypeVar("T", bound="Entity")
@@ -20,7 +21,7 @@ class Entity:
     A generic object to represent players, enemies, items, etc.
     """
 
-    parent: GameMap
+    parent: Union[GameMap, Inventory]
 
     def __init__(
         self,
@@ -86,6 +87,7 @@ class Actor(Entity):
         name: str = "<Unnamed>",
         ai_cls: Type[BaseAI],  # ability to move around
         fighter: Fighter,  # ability to give and receive damage
+        inventory: Inventory,
     ):
         # calls superclass's init, which is entity
         super().__init__(
@@ -102,6 +104,9 @@ class Actor(Entity):
 
         self.fighter = fighter
         self.fighter.parent = self
+
+        self.inventory = inventory
+        self.inventory.parent = self
 
     @property
     def is_alive(self) -> bool:
