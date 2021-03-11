@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import math
 
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
 
@@ -74,6 +75,12 @@ class Entity:
                     self.gamemap.entities.remove(self)
             self.parent = gamemap
             gamemap.entities.add(self)
+
+    def distance(self, x: int, y: int) -> float:
+        """
+        Return distance bw current entity and xy coordinates
+        """
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
 
 
 class Actor(Entity):
