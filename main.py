@@ -84,12 +84,15 @@ def main() -> None:
                     traceback.print_exc()  # print error
                     # print erro to message log
                     if isinstance(handler, input_handlers.EventHandler):
-                        handler.engine.message_log.add_message(traceback.format_exc(), color.error)
-        except exceptions.QuitWithoutSaving
+                        handler.engine.message_log.add_message(
+                            traceback.format_exc(), color.error
+                        )
+        except exceptions.QuitWithoutSaving:
             raise
-        except SystemExit: # save and quit
+        except SystemExit:  # save and quit
             # TODO add save here
-        except BaseException: # save on any other unexpected exception
+            raise
+        except BaseException:  # save on any other unexpected exception
             # TODO add save here
             raise
 
