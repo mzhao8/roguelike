@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING
 from tcod.console import Console
 from tcod.map import compute_fov
 
-from input_handlers import MainEventHandler
 from message_log import MessageLog
 from render_functions import render_bar, render_names_at_mouse_location
 
@@ -15,14 +14,12 @@ import exceptions
 if TYPE_CHECKING:
     from entity import Actor
     from game_map import GameMap
-    from input_handlers import EventHandler
 
 
 class Engine:
     game_map: GameMap  # owning an instance of gamemap
 
     def __init__(self, player: Actor):
-        self.event_handler: EventHandler = MainEventHandler(self)
         self.message_log = MessageLog()
         self.mouse_location = (0, 0)
         self.player = player

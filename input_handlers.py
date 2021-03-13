@@ -77,7 +77,7 @@ If an action is returned, it will be attempted and if valid, MainEventHandler wi
 class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
     def handle_events(self, event: tcod.event.Event) -> BaseEventHandler:
         """Handle an event and return to the next active event handler"""
-        state = self.dispatch.event
+        state = self.dispatch(event)
         if isinstance(state, BaseEventHandler):
             return state
         assert not isinstance(
