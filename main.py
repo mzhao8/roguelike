@@ -10,6 +10,13 @@ import input_handlers
 import setup_game
 
 
+def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
+    """If curent event handler has active engine, then save it"""
+    if isinstance(handler, input_handlers.EventHandler):
+        handler.engine.save_as(filename)
+        print("Game saved.")
+
+
 def main() -> None:
     # Variables for screen size
     screen_width = 80
@@ -57,10 +64,10 @@ def main() -> None:
         except exceptions.QuitWithoutSaving:
             raise
         except SystemExit:  # save and quit
-            # TODO add save here
+            save_game(handler, "savegame.sav")
             raise
         except BaseException:  # save on any other unexpected exception
-            # TODO add save here
+            save_game(handler, "savegame.sav")
             raise
 
 

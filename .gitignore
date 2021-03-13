@@ -29,3 +29,6 @@ $RECYCLE.BIN/
 .vscode/
 .history/
 *.code-workspace
+
+#saved game files
+*.sav
