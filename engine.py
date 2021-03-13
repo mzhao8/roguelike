@@ -10,6 +10,8 @@ from input_handlers import MainEventHandler
 from message_log import MessageLog
 from render_functions import render_bar, render_names_at_mouse_location
 
+import exceptions
+
 if TYPE_CHECKING:
     from entity import Actor
     from game_map import GameMap
