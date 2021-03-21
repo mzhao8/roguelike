@@ -25,10 +25,14 @@ max_monsters_by_floor = [
 ]
 
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.health_potion, 35)],
+    0: [
+        (entity_factories.health_potion, 35),
+        (entity_factories.sword, 75),
+        (entity_factories.chain_mail, 75),
+    ],
     2: [(entity_factories.confusion_scroll, 10)],
-    4: [(entity_factories.lightning_scroll, 25)],
-    6: [(entity_factories.fireball_scroll, 25)],
+    4: [(entity_factories.lightning_scroll, 25), (entity_factories.sword, 5)],
+    6: [(entity_factories.fireball_scroll, 25), (entity_factories.chain_mail, 15)],
 }
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
@@ -223,23 +227,3 @@ def generate_dungeon(
         # Finally, append the new room to the list
         rooms.append(new_room)
     return dungeon
-
-
-# OLD
-"""def generate_dungeon(
-    map_width, map_height
-) -> GameMap:  # Create a game map using RectangularRoom class
-
-    dungeon = GameMap(map_width, map_height)
-
-    room_1 = RectangularRoom(x=20, y=15, width=10, height=15)
-    room_2 = RectangularRoom(x=35, y=15, width=10, height=15)
-
-    dungeon.tiles[room_1.inner] = tile_types.floor
-    dungeon.tiles[room_2.inner] = tile_types.floor
-
-    for x, y in tunnel_between(room_2.center, room_1.center):
-        dungeon.tiles[x, y] = tile_types.floor
-
-    return dungeon
-"""
